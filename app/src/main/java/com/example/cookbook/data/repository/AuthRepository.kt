@@ -1,5 +1,6 @@
 package com.example.cookbook.data.repository
 
+import android.util.Log
 import com.example.cookbook.data.model.User
 import com.example.cookbook.util.Constants
 import com.example.cookbook.util.Result
@@ -20,6 +21,10 @@ import kotlinx.coroutines.tasks.await
 class AuthRepository {
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+
+    companion object {
+        private const val TAG = "AuthRepository"
+    }
 
     /**
      * Get the currently authenticated user as a Flow.
@@ -59,20 +64,30 @@ class AuthRepository {
      */
     fun signUp(email: String, password: String, name: String): Flow<Result<User>> = flow {
         try {
+            Log.d(TAG, "Starting signUp for email: $email")
             emit(Result.Loading)
 
-            // Create user in Firebase Auth
-            val authResult = auth.createUserWithEmailAndPassword(email, password).await()
+            // Create user in Firebase Auth with timeout
+            Log.d(TAG, "Creating user with Firebase Auth...")
+            val authResult = kotlinx.coroutines.withTimeout(30000) { // 30 second timeout
+                auth.createUserWithEmailAndPassword(email, password).await()
+            }
+            Log.d(TAG, "Auth result received")
+
             val firebaseUser = authResult.user
                 ?: throw Exception("User creation failed")
+            Log.d(TAG, "Firebase user created with UID: ${firebaseUser.uid}")
 
             // Update display name
+            Log.d(TAG, "Updating display name...")
             val profileUpdates = UserProfileChangeRequest.Builder()
                 .setDisplayName(name)
                 .build()
             firebaseUser.updateProfile(profileUpdates).await()
+            Log.d(TAG, "Display name updated successfully")
 
             // Create user document in Firestore
+            Log.d(TAG, "Creating Firestore document...")
             val user = User(
                 uid = firebaseUser.uid,
                 name = name,
@@ -84,10 +99,16 @@ class AuthRepository {
                 .document(firebaseUser.uid)
                 .set(user.toMap())
                 .await()
+            Log.d(TAG, "Firestore document created successfully")
 
             emit(Result.Success(user))
+            Log.d(TAG, "Sign up completed successfully")
+        } catch (e: kotlinx.coroutines.TimeoutCancellationException) {
+            Log.e(TAG, "Sign up timeout", e)
+            emit(Result.Error(Exception("Connection timeout. Please check your internet connection and Firebase setup.")))
         } catch (e: Exception) {
-            emit(Result.Error(e))
+            Log.e(TAG, "Sign up failed", e)
+            emit(Result.Error(Exception("Sign up failed: ${e.message ?: e.toString()}")))
         }
     }
 
@@ -96,23 +117,33 @@ class AuthRepository {
      */
     fun signIn(email: String, password: String): Flow<Result<User>> = flow {
         try {
+            Log.d(TAG, "Starting signIn for email: $email")
             emit(Result.Loading)
 
-            // Sign in with Firebase Auth
-            val authResult = auth.signInWithEmailAndPassword(email, password).await()
+            // Sign in with Firebase Auth with timeout
+            Log.d(TAG, "Signing in with Firebase Auth...")
+            val authResult = kotlinx.coroutines.withTimeout(30000) { // 30 second timeout
+                auth.signInWithEmailAndPassword(email, password).await()
+            }
+            Log.d(TAG, "Auth result received")
+
             val firebaseUser = authResult.user
                 ?: throw Exception("Sign in failed")
+            Log.d(TAG, "User signed in with UID: ${firebaseUser.uid}")
 
             // Get user document from Firestore
+            Log.d(TAG, "Fetching user document from Firestore...")
             val userDoc = firestore.collection(Constants.USERS_COLLECTION)
                 .document(firebaseUser.uid)
                 .get()
                 .await()
+            Log.d(TAG, "Firestore document fetched, exists: ${userDoc.exists()}")
 
             val user = if (userDoc.exists()) {
                 User.fromMap(userDoc.data ?: emptyMap())
             } else {
                 // Create user document if it doesn't exist (edge case)
+                Log.d(TAG, "User document doesn't exist, creating new one...")
                 val newUser = User(
                     uid = firebaseUser.uid,
                     name = firebaseUser.displayName ?: "",
@@ -123,12 +154,18 @@ class AuthRepository {
                     .document(firebaseUser.uid)
                     .set(newUser.toMap())
                     .await()
+                Log.d(TAG, "New user document created")
                 newUser
             }
 
             emit(Result.Success(user))
+            Log.d(TAG, "Sign in completed successfully")
+        } catch (e: kotlinx.coroutines.TimeoutCancellationException) {
+            Log.e(TAG, "Sign in timeout", e)
+            emit(Result.Error(Exception("Connection timeout. Please check your internet connection and Firebase setup.")))
         } catch (e: Exception) {
-            emit(Result.Error(e))
+            Log.e(TAG, "Sign in failed", e)
+            emit(Result.Error(Exception("Sign in failed: ${e.message ?: e.toString()}")))
         }
     }
 

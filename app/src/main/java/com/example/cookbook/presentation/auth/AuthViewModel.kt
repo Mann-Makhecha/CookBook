@@ -19,7 +19,7 @@ class AuthViewModel : ViewModel() {
     private val authRepository = AuthRepository()
 
     // Auth state
-    private val _authState = MutableStateFlow<Result<User>>(Result.Loading)
+    private val _authState = MutableStateFlow<Result<User>>(Result.Idle)
     val authState: StateFlow<Result<User>> = _authState.asStateFlow()
 
     // Password reset state
@@ -55,7 +55,7 @@ class AuthViewModel : ViewModel() {
     init {
         // Check if user is already signed in
         if (authRepository.isUserSignedIn()) {
-            _authState.value = Result.Loading
+            _authState.value = Result.Idle
             // We'll handle this in the splash screen
         }
     }
@@ -154,7 +154,7 @@ class AuthViewModel : ViewModel() {
     fun signOut() {
         authRepository.signOut()
         clearForm()
-        _authState.value = Result.Loading
+        _authState.value = Result.Idle
     }
 
     /**
@@ -168,7 +168,7 @@ class AuthViewModel : ViewModel() {
      * Clear auth state (used when navigating away from error state).
      */
     fun clearAuthState() {
-        _authState.value = Result.Loading
+        _authState.value = Result.Idle
     }
 
     /**

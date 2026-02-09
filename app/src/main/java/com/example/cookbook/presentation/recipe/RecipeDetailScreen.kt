@@ -79,7 +79,7 @@ fun RecipeDetailScreen(
         }
     ) { paddingValues ->
         when (recipeState) {
-            is Result.Loading, null -> {
+            is Result.Loading, Result.Idle, null -> {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()

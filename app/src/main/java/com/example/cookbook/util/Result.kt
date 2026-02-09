@@ -8,6 +8,7 @@ sealed class Result<out T> {
     data class Success<out T>(val data: T) : Result<T>()
     data class Error(val exception: Exception) : Result<Nothing>()
     object Loading : Result<Nothing>()
+    object Idle : Result<Nothing>()
 
     val isSuccess: Boolean
         get() = this is Success
@@ -17,6 +18,9 @@ sealed class Result<out T> {
 
     val isLoading: Boolean
         get() = this is Loading
+
+    val isIdle: Boolean
+        get() = this is Idle
 }
 
 /**
@@ -27,6 +31,7 @@ inline fun <T, R> Result<T>.map(transform: (T) -> R): Result<R> {
         is Result.Success -> Result.Success(transform(data))
         is Result.Error -> Result.Error(exception)
         is Result.Loading -> Result.Loading
+        is Result.Idle -> Result.Idle
     }
 }
 

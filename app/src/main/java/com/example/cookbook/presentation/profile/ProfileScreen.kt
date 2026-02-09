@@ -163,7 +163,7 @@ fun ProfileScreen(
 
             // User's Recipes List
             when (userRecipesState) {
-                is Result.Loading -> {
+                is Result.Loading, Result.Idle -> {
                     item {
                         Box(
                             modifier = Modifier

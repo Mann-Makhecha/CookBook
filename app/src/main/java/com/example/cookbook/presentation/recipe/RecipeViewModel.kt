@@ -144,6 +144,7 @@ class RecipeViewModel : ViewModel() {
                         }
                         is Result.Error -> _favoriteRecipesState.value = result
                         is Result.Loading -> _favoriteRecipesState.value = result
+                        is Result.Idle -> {}
                     }
                 }
         }
@@ -183,6 +184,7 @@ class RecipeViewModel : ViewModel() {
                                     return@collect
                                 }
                                 is Result.Loading -> {}
+                                is Result.Idle -> {}
                             }
                         }
                     uploadedUrl
@@ -236,6 +238,7 @@ class RecipeViewModel : ViewModel() {
                                     return@collect
                                 }
                                 is Result.Loading -> {}
+                                is Result.Idle -> {}
                             }
                         }
                     uploadedUrl
@@ -252,6 +255,7 @@ class RecipeViewModel : ViewModel() {
                             is Result.Success -> _saveRecipeState.value = Result.Success(recipe.recipeId)
                             is Result.Error -> _saveRecipeState.value = result
                             is Result.Loading -> {}
+                            is Result.Idle -> {}
                         }
                     }
             } catch (e: Exception) {

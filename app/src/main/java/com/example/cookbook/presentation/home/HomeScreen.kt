@@ -93,7 +93,7 @@ fun HomeScreen(
 
             // Recipe List
             when (recipesState) {
-                is Result.Loading -> {
+                is Result.Loading, Result.Idle -> {
                     Box(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center

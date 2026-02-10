@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Eco
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Visibility
@@ -65,11 +66,12 @@ fun LoginScreen(
             verticalArrangement = Arrangement.Center
         ) {
             // App Logo
-            Text(
-                text = "🍳",
-                style = MaterialTheme.typography.displayMedium,
-                modifier = Modifier.size(80.dp)
-            )
+           Icon(
+                                imageVector = Icons.Default.Eco,
+                                contentDescription = "Vegetarian placeholder",
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(96.dp)
+                            )
 
             Spacer(modifier = Modifier.height(8.dp))
 

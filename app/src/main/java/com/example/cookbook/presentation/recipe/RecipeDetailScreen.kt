@@ -131,9 +131,11 @@ fun RecipeDetailScreen(
                                 .height(250.dp),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text(
-                                text = "🍳",
-                                style = MaterialTheme.typography.displayLarge
+                            Icon(
+                                imageVector = Icons.Default.Eco,
+                                contentDescription = "Vegetarian placeholder",
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(96.dp)
                             )
                         }
                     }

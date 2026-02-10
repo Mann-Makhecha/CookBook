@@ -203,11 +203,12 @@ fun EmptyRecipesView(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
             modifier = Modifier.padding(32.dp)
-        ) {
-            Text(
-                text = "🍳",
-                style = MaterialTheme.typography.displayLarge
-            )
+        ) {Icon(
+                                imageVector = Icons.Default.Eco,
+                                contentDescription = "Vegetarian placeholder",
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(96.dp)
+                            )
 
             Spacer(modifier = Modifier.height(16.dp))
 

@@ -3,8 +3,11 @@ package com.example.cookbook.presentation.auth
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -52,11 +55,12 @@ fun SplashScreen(
                 verticalArrangement = Arrangement.Center
             ) {
                 // App Icon/Logo would go here
-                Text(
-                    text = "🍳",
-                    style = MaterialTheme.typography.displayLarge,
-                    modifier = Modifier.size(120.dp)
-                )
+                Icon(
+                                imageVector = Icons.Default.Eco,
+                                contentDescription = "Vegetarian placeholder",
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(96.dp)
+                            )
 
                 Spacer(modifier = Modifier.height(16.dp))
 

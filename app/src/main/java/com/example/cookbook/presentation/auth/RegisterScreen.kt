@@ -70,12 +70,12 @@ fun RegisterScreen(
             verticalArrangement = Arrangement.Center
         ) {
             // App Logo
-            Text(
-                text = "🍳",
-                style = MaterialTheme.typography.displayMedium,
-                modifier = Modifier.size(80.dp)
-            )
-
+           Icon(
+                imageVector = Icons.Default.Eco,
+                contentDescription = "Vegetarian placeholder",
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(96.dp)
+                )
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(

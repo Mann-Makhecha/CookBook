@@ -3,7 +3,9 @@ package com.example.cookbook.presentation.components
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material3.Icon
 import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.Eco
 import androidx.compose.material.icons.filled.Restaurant
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -53,10 +55,14 @@ fun RecipeCard(
                         .height(180.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = "🍳",
-                        style = MaterialTheme.typography.displayLarge
+                    Icon(
+                                imageVector = Icons.Default.Eco,
+                                contentDescription = "Vegetarian placeholder",
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(96.dp)
                     )
+
+
                 }
             }
 
@@ -214,11 +220,12 @@ fun CompactRecipeCard(
                         .fillMaxWidth()
                         .height(120.dp),
                     contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "🍳",
-                        style = MaterialTheme.typography.displayMedium
-                    )
+                ) {Icon(
+                                imageVector = Icons.Default.Eco,
+                                contentDescription = "Vegetarian placeholder",
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(96.dp)
+                            )
                 }
             }
 

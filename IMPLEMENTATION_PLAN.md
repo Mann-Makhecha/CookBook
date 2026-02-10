@@ -8,6 +8,7 @@
 ---
 
 ## Table of Contents
+
 1. [Firebase Setup](#1-firebase-setup)
 2. [Android Project Setup](#2-android-project-setup)
 3. [Project Structure](#3-project-structure)
@@ -31,9 +32,9 @@
 
 1. In Firebase Console, click the **Android icon** (⚙️)
 2. Register app:
-   - **Package name:** `com.yourname.cookbook` (must match your app)
-   - **App nickname:** CookBook
-   - **Debug signing certificate:** (optional for now)
+    - **Package name:** `com.yourname.cookbook` (must match your app)
+    - **App nickname:** CookBook
+    - **Debug signing certificate:** (optional for now)
 3. Download `google-services.json`
 4. Place it in: `app/` directory
 5. Follow setup instructions for Gradle files
@@ -46,6 +47,7 @@
 4. Save changes
 
 **Features to enable:**
+
 - ✅ Email/Password authentication
 - ❌ Email link (passwordless) - not needed for MVP
 - ❌ Google Sign-In - future feature
@@ -58,6 +60,7 @@
 4. Click **"Enable"**
 
 **Initial Collections:**
+
 ```
 ├── users/
 │   └── {userId}
@@ -87,10 +90,10 @@
 2. Start in **test mode**
 3. Choose same region as Firestore
 4. Create folder structure:
-   ```
-   ├── recipe_images/
-   │   └── {userId}/{recipeId}.jpg
-   ```
+    ```
+    ├── recipe_images/
+    │   └── {userId}/{recipeId}.jpg
+    ```
 
 ---
 
@@ -107,6 +110,7 @@
 ### 2.2 Project-level Configuration
 
 **`build.gradle.kts` (Project):**
+
 ```kotlin
 buildscript {
     dependencies {
@@ -123,6 +127,7 @@ plugins {
 ### 2.3 App-level Configuration
 
 **`build.gradle.kts` (App):**
+
 ```kotlin
 plugins {
     id("com.android.application")
@@ -201,6 +206,7 @@ dependencies {
 ### 2.4 Android Manifest Permissions
 
 **`AndroidManifest.xml`:**
+
 ```xml
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -329,13 +335,16 @@ app/src/main/java/com/yourname/cookbook/
 ### Phase 1: Foundation & Authentication (Week 1)
 
 #### Task 1.1: Setup Firebase & Dependencies
+
 - [ ] Create Firebase project
 - [ ] Add `google-services.json`
 - [ ] Configure Gradle dependencies
 - [ ] Test Firebase connection
 
 #### Task 1.2: Create Data Models
+
 **`data/model/User.kt`:**
+
 ```kotlin
 data class User(
     val uid: String = "",
@@ -346,6 +355,7 @@ data class User(
 ```
 
 **`data/model/Recipe.kt`:**
+
 ```kotlin
 data class Recipe(
     val recipeId: String = "",
@@ -363,7 +373,9 @@ data class Recipe(
 ```
 
 #### Task 1.3: Authentication Repository
+
 **`data/repository/AuthRepository.kt`:**
+
 ```kotlin
 class AuthRepository {
     private val auth = Firebase.auth
@@ -377,12 +389,14 @@ class AuthRepository {
 ```
 
 #### Task 1.4: Auth UI Screens
+
 - [ ] Splash Screen (auto-navigate based on auth state)
 - [ ] Login Screen (email/password fields + validation)
 - [ ] Register Screen (name, email, password fields)
 - [ ] Forgot Password Screen
 
 #### Task 1.5: Navigation Setup
+
 - [ ] Create NavGraph with authentication routing
 - [ ] Implement navigation destinations
 - [ ] Handle back stack management
@@ -394,7 +408,9 @@ class AuthRepository {
 ### Phase 2: Recipe Core Features (Week 2)
 
 #### Task 2.1: Firestore Repository
+
 **`data/repository/RecipeRepository.kt`:**
+
 ```kotlin
 class RecipeRepository {
     private val db = Firebase.firestore
@@ -410,7 +426,9 @@ class RecipeRepository {
 ```
 
 #### Task 2.2: Storage Repository
+
 **`data/repository/StorageRepository.kt`:**
+
 ```kotlin
 class StorageRepository {
     private val storage = Firebase.storage
@@ -421,6 +439,7 @@ class StorageRepository {
 ```
 
 #### Task 2.3: Home Screen
+
 - [ ] Create recipe feed with LazyColumn
 - [ ] Implement RecipeCard component
 - [ ] Add pull-to-refresh
@@ -428,6 +447,7 @@ class StorageRepository {
 - [ ] Add category filter chips
 
 #### Task 2.4: Recipe Detail Screen
+
 - [ ] Display all recipe information
 - [ ] Add favorite button (heart icon)
 - [ ] Show ingredients list
@@ -436,6 +456,7 @@ class StorageRepository {
 - [ ] Add "Add to Shopping List" button
 
 #### Task 2.5: Add/Edit Recipe Screen
+
 - [ ] Image picker (gallery selection)
 - [ ] Text fields for all recipe data
 - [ ] Category dropdown
@@ -451,7 +472,9 @@ class StorageRepository {
 ### Phase 3: Advanced Features (Week 3)
 
 #### Task 3.1: Favorites System
+
 **`data/repository/UserRepository.kt`:**
+
 ```kotlin
 class UserRepository {
     fun addToFavorites(userId: String, recipeId: String): Flow<Result<Unit>>
@@ -465,6 +488,7 @@ class UserRepository {
 - [ ] Update UI indicators
 
 #### Task 3.2: Search Functionality
+
 - [ ] Search bar with TextInput
 - [ ] Search by recipe name
 - [ ] Filter by category
@@ -472,7 +496,9 @@ class UserRepository {
 - [ ] Empty state UI
 
 #### Task 3.3: Cooking Timer
+
 **`data/service/TimerService.kt`:**
+
 ```kotlin
 class TimerService : Service() {
     private var countDownTimer: CountDownTimer? = null
@@ -486,6 +512,7 @@ class TimerService : Service() {
 ```
 
 **Features:**
+
 - [ ] Timer UI with circular progress indicator
 - [ ] Start/Pause/Resume/Reset buttons
 - [ ] Foreground service for background operation
@@ -494,6 +521,7 @@ class TimerService : Service() {
 - [ ] Vibration on completion
 
 #### Task 3.4: Shopping List
+
 - [ ] Add ingredients from recipe to list
 - [ ] Check/uncheck items
 - [ ] Remove items
@@ -501,6 +529,7 @@ class TimerService : Service() {
 - [ ] Persist list in Firestore
 
 #### Task 3.5: Profile Screen
+
 - [ ] Display user info
 - [ ] Show user's uploaded recipes
 - [ ] Logout button
@@ -513,6 +542,7 @@ class TimerService : Service() {
 ### Phase 4: UI/UX Polish & Security (Week 4)
 
 #### Task 4.1: Material 3 Theming
+
 - [ ] Define color scheme (light/dark themes)
 - [ ] Typography system
 - [ ] Component styling
@@ -520,6 +550,7 @@ class TimerService : Service() {
 - [ ] Smooth animations/transitions
 
 #### Task 4.2: Error Handling
+
 - [ ] Network error messages
 - [ ] Form validation errors
 - [ ] Firebase error handling
@@ -527,12 +558,14 @@ class TimerService : Service() {
 - [ ] Toast messages for feedback
 
 #### Task 4.3: Loading States
+
 - [ ] Shimmer loading for recipe cards
 - [ ] Progress indicators for uploads
 - [ ] Skeleton screens
 - [ ] Pull-to-refresh indicators
 
 #### Task 4.4: Bottom Navigation
+
 - [ ] Home tab
 - [ ] Search tab
 - [ ] Add Recipe tab (center, highlighted)
@@ -546,7 +579,9 @@ class TimerService : Service() {
 ### Phase 5: Security & Testing
 
 #### Task 5.1: Firestore Security Rules
+
 **Deploy these rules:**
+
 ```javascript
 rules_version = '2';
 service cloud.firestore {
@@ -571,6 +606,7 @@ service cloud.firestore {
 ```
 
 #### Task 5.2: Storage Security Rules
+
 ```javascript
 rules_version = '2';
 service firebase.storage {
@@ -586,6 +622,7 @@ service firebase.storage {
 ```
 
 #### Task 5.3: Testing Checklist
+
 - [ ] Test auth flow (signup, login, logout, password reset)
 - [ ] Test recipe creation with image upload
 - [ ] Test recipe editing/deletion (own recipes only)
@@ -606,34 +643,34 @@ service firebase.storage {
 
 ### 5.1 Firebase Free Tier Limits
 
-| Service | Free Tier Limit |
-|---------|----------------|
-| Firestore Reads | 50,000/day |
-| Firestore Writes | 20,000/day |
-| Firestore Deletes | 20,000/day |
-| Firestore Storage | 1 GB |
-| Storage Downloads | 1 GB/day |
-| Storage Uploads | 360 MB/day |
-| Storage Total | 5 GB |
-| Authentication Users | Unlimited |
+| Service              | Free Tier Limit |
+| -------------------- | --------------- |
+| Firestore Reads      | 50,000/day      |
+| Firestore Writes     | 20,000/day      |
+| Firestore Deletes    | 20,000/day      |
+| Firestore Storage    | 1 GB            |
+| Storage Downloads    | 1 GB/day        |
+| Storage Uploads      | 360 MB/day      |
+| Storage Total        | 5 GB            |
+| Authentication Users | Unlimited       |
 
 ### 5.2 Best Practices
 
 1. **Image Optimization:**
-   - Compress images before upload (max 1MB)
-   - Use WebP format
-   - Generate thumbnails for list views
+    - Compress images before upload (max 1MB)
+    - Use WebP format
+    - Generate thumbnails for list views
 
 2. **Query Optimization:**
-   - Use pagination (limit queries)
-   - Cache frequently accessed data
-   - Implement offline persistence
+    - Use pagination (limit queries)
+    - Cache frequently accessed data
+    - Implement offline persistence
 
 3. **Security:**
-   - Never trust client-side validation
-   - Always validate on backend (Firestore rules)
-   - Sanitize user inputs
-   - Rate limit expensive operations
+    - Never trust client-side validation
+    - Always validate on backend (Firestore rules)
+    - Sanitize user inputs
+    - Rate limit expensive operations
 
 ---
 
@@ -642,6 +679,7 @@ service firebase.storage {
 ### 6.1 Functional Testing
 
 #### Authentication
+
 - [ ] User can register with valid email/password
 - [ ] User cannot register with invalid email
 - [ ] User cannot register with weak password (< 6 chars)
@@ -652,6 +690,7 @@ service firebase.storage {
 - [ ] User is redirected to login after logout
 
 #### Recipe Management
+
 - [ ] User can view all recipes
 - [ ] User can view recipe details
 - [ ] User can add new recipe with image
@@ -663,18 +702,21 @@ service firebase.storage {
 - [ ] Images display correctly
 
 #### Favorites
+
 - [ ] User can add recipe to favorites
 - [ ] User can remove recipe from favorites
 - [ ] Favorites persist after app restart
 - [ ] Favorites screen shows only favorited recipes
 
 #### Search
+
 - [ ] Search returns matching recipes
 - [ ] Search is case-insensitive
 - [ ] Category filter works correctly
 - [ ] Empty search shows all recipes
 
 #### Timer
+
 - [ ] Timer counts down correctly
 - [ ] Timer can be paused/resumed
 - [ ] Timer can be reset
@@ -684,12 +726,14 @@ service firebase.storage {
 - [ ] Timer can be controlled from notification
 
 #### Shopping List
+
 - [ ] Items can be added from recipe
 - [ ] Items can be checked/unchecked
 - [ ] Items can be removed
 - [ ] List persists after app restart
 
 ### 6.2 UI/UX Testing
+
 - [ ] All screens follow Material 3 design
 - [ ] App is responsive on different screen sizes
 - [ ] Loading states are shown appropriately
@@ -699,6 +743,7 @@ service firebase.storage {
 - [ ] Animations are smooth (60fps)
 
 ### 6.3 Performance Testing
+
 - [ ] App launches in < 3 seconds
 - [ ] Recipes load in < 2 seconds
 - [ ] Image uploads show progress
@@ -710,19 +755,20 @@ service firebase.storage {
 
 ## 7. Key Metrics to Track
 
-| Metric | Target | Tracking Method |
-|--------|--------|----------------|
-| User Signups | 100+ | Firebase Auth count |
-| Recipes Added | 200+ | Firestore document count |
-| App Crash Rate | < 2% | Crashlytics (future) |
-| Avg Session Time | 5+ mins | Analytics (future) |
-| Timer Usage Rate | 40%+ | Custom event tracking |
+| Metric           | Target  | Tracking Method          |
+| ---------------- | ------- | ------------------------ |
+| User Signups     | 100+    | Firebase Auth count      |
+| Recipes Added    | 200+    | Firestore document count |
+| App Crash Rate   | < 2%    | Crashlytics (future)     |
+| Avg Session Time | 5+ mins | Analytics (future)       |
+| Timer Usage Rate | 40%+    | Custom event tracking    |
 
 ---
 
 ## 8. Future Enhancements (Post-MVP)
 
 ### Version 2.0 Features
+
 - [ ] Recipe ratings and reviews
 - [ ] Comment system
 - [ ] Video recipe support
@@ -737,6 +783,7 @@ service firebase.storage {
 - [ ] Recipe versioning
 
 ### Technical Improvements
+
 - [ ] Migrate to Jetpack Compose fully
 - [ ] Add unit tests (JUnit)
 - [ ] Add UI tests (Espresso)
@@ -752,16 +799,19 @@ service firebase.storage {
 ## 9. Resources
 
 ### Documentation
+
 - [Firebase Android Setup](https://firebase.google.com/docs/android/setup)
 - [Firestore Documentation](https://firebase.google.com/docs/firestore)
 - [Material 3 Guidelines](https://m3.material.io/)
 - [Jetpack Compose](https://developer.android.com/jetpack/compose)
 
 ### Design Assets
+
 - [Material Icons](https://fonts.google.com/icons)
 - [Compose Material3 Components](https://developer.android.com/jetpack/compose/designsystems/material3)
 
 ### Tools
+
 - [Firebase Console](https://console.firebase.google.com/)
 - [Android Studio](https://developer.android.com/studio)
 - [Figma](https://www.figma.com/) - for UI mockups
@@ -770,13 +820,13 @@ service firebase.storage {
 
 ## 10. Timeline Summary
 
-| Phase | Duration | Key Deliverables |
-|-------|----------|------------------|
-| Phase 1 | Week 1 | Authentication flow complete |
-| Phase 2 | Week 2 | Recipe CRUD operations |
-| Phase 3 | Week 3 | Timer, search, favorites |
-| Phase 4 | Week 4 | UI polish, security rules |
-| Phase 5 | Week 5 | Testing & deployment |
+| Phase   | Duration | Key Deliverables             |
+| ------- | -------- | ---------------------------- |
+| Phase 1 | Week 1   | Authentication flow complete |
+| Phase 2 | Week 2   | Recipe CRUD operations       |
+| Phase 3 | Week 3   | Timer, search, favorites     |
+| Phase 4 | Week 4   | UI polish, security rules    |
+| Phase 5 | Week 5   | Testing & deployment         |
 
 **Total Estimated Duration:** 5 weeks (for solo developer)
 
@@ -785,25 +835,30 @@ service firebase.storage {
 ## Getting Started
 
 1. **Setup Firebase** (Day 1)
-   - Create project
-   - Enable services
-   - Download config file
+    - Create project
+    - Enable services
+    - Download config file
 
 2. **Configure Android Project** (Day 1)
-   - Add dependencies
-   - Setup project structure
-   - Test Firebase connection
+    - Add dependencies
+    - Setup project structure
+    - Test Firebase connection
 
 3. **Start Coding** (Day 2+)
-   - Follow phase-by-phase implementation
-   - Test each feature as you build
-   - Commit code regularly
+    - Follow phase-by-phase implementation
+    - Test each feature as you build
+    - Commit code regularly
 
 4. **Launch MVP** (Week 5)
-   - Complete testing
-   - Deploy security rules
-   - Release to Play Store (internal testing)
+    - Complete testing
+    - Deploy security rules
+    - Release to Play Store (internal testing)
 
 ---
 
-**Good luck building CookBook!** 🍳
+**Good luck building CookBook!** Icon(
+imageVector = Icons.Default.Eco,
+contentDescription = "Vegetarian placeholder",
+tint = MaterialTheme.colorScheme.primary,
+modifier = Modifier.size(96.dp)
+)

@@ -12,32 +12,38 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = Orange80,
+    onPrimary = OnPrimaryDark,
+    secondary = Green80,
+    onSecondary = OnSecondaryDark,
+    tertiary = Brown80,
+    background = BackgroundDark,
+    surface = SurfaceDark,
+    onBackground = OnBackgroundDark,
+    onSurface = OnSurfaceDark,
+    onSurfaceVariant = OnSurfaceVariantDark,
+    error = ErrorDark
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    primary = Orange40,
+    onPrimary = OnPrimaryLight,
+    secondary = Green40,
+    onSecondary = OnSecondaryLight,
+    tertiary = Brown40,
+    background = CreamLight,
+    surface = SurfaceLight,
+    onBackground = OnBackgroundLight,
+    onSurface = OnSurfaceLight,
+    onSurfaceVariant = OnSurfaceVariantLight,
+    error = ErrorLight
 )
 
 @Composable
 fun CookBookTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    // Dynamic color is available on Android 12+ - disabled to use custom theme
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {

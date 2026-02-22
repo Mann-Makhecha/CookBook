@@ -1,5 +1,6 @@
 package com.example.cookbook.presentation.navigation
 
+import android.net.Uri
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -19,8 +20,11 @@ import com.example.cookbook.presentation.profile.ProfileScreen
 import com.example.cookbook.presentation.recipe.AddRecipeScreen
 import com.example.cookbook.presentation.recipe.EditRecipeScreen
 import com.example.cookbook.presentation.recipe.RecipeDetailScreen
+import com.example.cookbook.presentation.recipe.ShoppingListScreen
+import com.example.cookbook.presentation.recipe.TimerScreen
 import com.example.cookbook.presentation.search.SearchScreen
 import com.example.cookbook.util.Constants
+import org.json.JSONArray
 
 /**
  * Main navigation graph for the CookBook app.
@@ -135,8 +139,9 @@ fun NavGraph(
                     navController.navigate(Constants.Routes.timer(duration))
                 },
                 onShoppingListClick = { ingredients ->
-                    // TODO: Pass ingredients to shopping list
-                    navController.navigate(Constants.Routes.SHOPPING_LIST)
+                    val jsonArray = JSONArray(ingredients)
+                    val encoded = Uri.encode(jsonArray.toString())
+                    navController.navigate(Constants.Routes.shoppingList(encoded))
                 }
             )
         }
@@ -190,7 +195,7 @@ fun NavGraph(
             )
         }
 
-        // Timer Screen - Placeholder
+        // Timer Screen
         composable(
             route = Constants.Routes.TIMER,
             arguments = listOf(
@@ -198,12 +203,27 @@ fun NavGraph(
             )
         ) { backStackEntry ->
             val duration = backStackEntry.arguments?.getInt("duration") ?: 0
-            // TODO: Implement Timer Screen
+            TimerScreen(
+                durationMinutes = duration,
+                onNavigateBack = { navController.popBackStack() }
+            )
         }
 
-        // Shopping List Screen - Placeholder
-        composable(Constants.Routes.SHOPPING_LIST) {
-            // TODO: Implement Shopping List Screen
+        // Shopping List Screen
+        composable(
+            route = Constants.Routes.SHOPPING_LIST,
+            arguments = listOf(
+                navArgument("ingredients") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val encodedIngredients = backStackEntry.arguments?.getString("ingredients") ?: "[]"
+            val decoded = Uri.decode(encodedIngredients)
+            val jsonArray = JSONArray(decoded)
+            val ingredientsList = (0 until jsonArray.length()).map { jsonArray.getString(it) }
+            ShoppingListScreen(
+                ingredients = ingredientsList,
+                onNavigateBack = { navController.popBackStack() }
+            )
         }
 
         // Profile Screen

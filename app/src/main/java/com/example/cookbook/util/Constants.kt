@@ -38,12 +38,13 @@ object Constants {
         const val FAVORITES = "favorites"
         const val SEARCH = "search"
         const val TIMER = "timer/{duration}"
-        const val SHOPPING_LIST = "shopping_list"
+        const val SHOPPING_LIST = "shopping_list/{ingredients}"
         const val PROFILE = "profile"
 
         fun recipeDetail(recipeId: String) = "recipe_detail/$recipeId"
         fun editRecipe(recipeId: String) = "edit_recipe/$recipeId"
         fun timer(durationMinutes: Int) = "timer/$durationMinutes"
+        fun shoppingList(encodedIngredients: String) = "shopping_list/$encodedIngredients"
     }
 
     // Validation

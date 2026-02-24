@@ -1,7 +1,8 @@
 package com.example.cookbook.presentation.recipe
 
+import android.app.Application
 import android.net.Uri
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cookbook.data.model.Recipe
 import com.example.cookbook.data.model.Review
@@ -21,7 +22,7 @@ import kotlinx.coroutines.launch
  * ViewModel for managing recipe-related operations.
  * Handles recipe CRUD, favorites, and image uploads.
  */
-class RecipeViewModel : ViewModel() {
+class RecipeViewModel(application: Application) : AndroidViewModel(application) {
     private val recipeRepository = RecipeRepository()
     private val storageRepository = StorageRepository()
     private val userRepository = UserRepository()
@@ -245,7 +246,7 @@ class RecipeViewModel : ViewModel() {
                 // Upload image if provided
                 val imageUrl = if (imageUri != null) {
                     var uploadedUrl = ""
-                    storageRepository.uploadRecipeImage(imageUri, userId)
+                    storageRepository.uploadRecipeImage(getApplication(), imageUri, userId)
                         .collect { result ->
                             when (result) {
                                 is Result.Success -> uploadedUrl = result.data
@@ -299,7 +300,7 @@ class RecipeViewModel : ViewModel() {
 
                     // Upload new image
                     var uploadedUrl = recipe.imageUrl
-                    storageRepository.uploadRecipeImage(newImageUri, userId, recipe.recipeId)
+                    storageRepository.uploadRecipeImage(getApplication(), newImageUri, userId, recipe.recipeId)
                         .collect { result ->
                             when (result) {
                                 is Result.Success -> uploadedUrl = result.data

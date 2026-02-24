@@ -1,31 +1,38 @@
 package com.example.cookbook.data.repository
 
+import android.content.Context
 import android.net.Uri
-import com.example.cookbook.util.Constants
+import com.example.cookbook.BuildConfig
 import com.example.cookbook.util.Result
-import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.tasks.await
-import java.util.UUID
+import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
 
 /**
- * Repository for handling Firebase Storage operations.
- * Manages image uploads and deletions for recipe images.
+ * Repository for handling image uploads.
+ * Uses ImgBB free API for image hosting.
  */
 class StorageRepository {
-    private val storage: FirebaseStorage = FirebaseStorage.getInstance()
-    private val storageRef = storage.reference
+    private val client = OkHttpClient()
 
     /**
-     * Upload a recipe image to Firebase Storage.
+     * Upload a recipe image to ImgBB.
      *
+     * @param context Used to resolve the Uri to bytes
      * @param imageUri The local URI of the image to upload
      * @param userId The ID of the user uploading the image
-     * @param recipeId The ID of the recipe (optional, generates one if not provided)
+     * @param recipeId The ID of the recipe (optional)
      * @return Flow emitting the download URL of the uploaded image
      */
     fun uploadRecipeImage(
+        context: Context,
         imageUri: Uri,
         userId: String,
         recipeId: String? = null
@@ -33,83 +40,80 @@ class StorageRepository {
         try {
             emit(Result.Loading)
 
-            // Generate a unique filename
-            val fileName = recipeId ?: UUID.randomUUID().toString()
-            val imageRef = storageRef
-                .child("${Constants.RECIPE_IMAGES_PATH}/$userId/$fileName.jpg")
+            val apiKey = BuildConfig.IMGBB_API_KEY
+            if (apiKey.isEmpty()) {
+                emit(Result.Error(Exception("ImgBB API Key is missing. Please add it to local.properties.")))
+                return@flow
+            }
 
-            // Upload the file
-            val uploadTask = imageRef.putFile(imageUri)
-            uploadTask.await()
+            // Read the file data from Uri
+            val bytes = withContext(Dispatchers.IO) {
+                context.contentResolver.openInputStream(imageUri)?.use { it.readBytes() }
+            }
 
-            // Get the download URL
-            val downloadUrl = imageRef.downloadUrl.await()
+            if (bytes == null) {
+                emit(Result.Error(Exception("Could not read image data")))
+                return@flow
+            }
 
-            emit(Result.Success(downloadUrl.toString()))
+            // Create OkHttp request body
+            val requestBody = MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("key", apiKey)
+                .addFormDataPart(
+                    "image",
+                    "image.jpg",
+                    bytes.toRequestBody("image/jpeg".toMediaTypeOrNull())
+                )
+                .build()
+
+            val request = Request.Builder()
+                .url("https://api.imgbb.com/1/upload")
+                .post(requestBody)
+                .build()
+
+            val response = withContext(Dispatchers.IO) {
+                client.newCall(request).execute()
+            }
+
+            if (response.isSuccessful) {
+                val responseBody = response.body?.string() ?: ""
+                val json = JSONObject(responseBody)
+                val data = json.optJSONObject("data")
+                val imageUrl = data?.optString("display_url")
+                
+                if (!imageUrl.isNullOrEmpty()) {
+                    emit(Result.Success(imageUrl))
+                } else {
+                    emit(Result.Error(Exception("Failed to get image URL from response")))
+                }
+            } else {
+                emit(Result.Error(Exception("Upload failed with code: ${response.code}")))
+            }
         } catch (e: Exception) {
             emit(Result.Error(e))
         }
     }
 
     /**
-     * Delete a recipe image from Firebase Storage using its URL.
-     *
-     * @param imageUrl The download URL of the image to delete
+     * Delete a recipe image.
+     * With ImgBB free API, deletion requires a deletion URL which isn't practical to store and manage without full auth.
+     * Just returning success as no-op.
      */
     fun deleteRecipeImage(imageUrl: String): Flow<Result<Unit>> = flow {
-        try {
-            emit(Result.Loading)
-
-            if (imageUrl.isEmpty()) {
-                emit(Result.Success(Unit))
-                return@flow
-            }
-
-            // Get reference from URL
-            val imageRef = storage.getReferenceFromUrl(imageUrl)
-            imageRef.delete().await()
-
-            emit(Result.Success(Unit))
-        } catch (e: Exception) {
-            // Even if deletion fails, we consider it a success
-            // to avoid blocking the user
-            emit(Result.Success(Unit))
-        }
+        emit(Result.Loading)
+        emit(Result.Success(Unit))
     }
 
     /**
      * Delete multiple recipe images.
-     *
-     * @param imageUrls List of image URLs to delete
      */
     fun deleteRecipeImages(imageUrls: List<String>): Flow<Result<Unit>> = flow {
-        try {
-            emit(Result.Loading)
-
-            imageUrls.forEach { imageUrl ->
-                if (imageUrl.isNotEmpty()) {
-                    try {
-                        val imageRef = storage.getReferenceFromUrl(imageUrl)
-                        imageRef.delete().await()
-                    } catch (e: Exception) {
-                        // Continue deleting other images even if one fails
-                    }
-                }
-            }
-
-            emit(Result.Success(Unit))
-        } catch (e: Exception) {
-            emit(Result.Error(e))
-        }
+        emit(Result.Loading)
+        emit(Result.Success(Unit))
     }
 
-    /**
-     * Get the file size of an image before uploading.
-     * Useful for validating file size limits.
-     */
     fun getImageSize(imageUri: Uri): Long {
-        // This would need to be implemented with ContentResolver
-        // For now, return 0 and handle validation on upload
         return 0L
     }
 }

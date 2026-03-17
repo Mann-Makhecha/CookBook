@@ -7,8 +7,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+
 /**
- * Dialog for users to submit a rating and comment for a recipe.
+ * Premium Glass Dialog for users to submit a rating and comment for a recipe.
  */
 @Composable
 fun AddReviewDialog(
@@ -18,17 +22,32 @@ fun AddReviewDialog(
     var rating by remember { mutableStateOf(5f) }
     var comment by remember { mutableStateOf("") }
 
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("Rate this Recipe") },
-        text = {
+    Dialog(onDismissRequest = onDismiss) {
+        GlassContainer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            cornerRadius = 32.dp
+        ) {
             Column(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
+                    text = "Rate this Recipe",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
                     text = "How would you rate this recipe?",
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -45,23 +64,38 @@ fun AddReviewDialog(
                     value = comment,
                     onValueChange = { comment = it },
                     label = { Text("Add a comment (optional)") },
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedContainerColor = Color.Transparent,
+                        unfocusedContainerColor = Color.Transparent,
+                        focusedBorderColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
+                        unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+                    ),
                     modifier = Modifier.fillMaxWidth(),
                     minLines = 3
                 )
-            }
-        },
-        confirmButton = {
-            Button(
-                onClick = { onSubmit(rating, comment) },
-                enabled = rating > 0
-            ) {
-                Text("Submit")
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Cancel")
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    TextButton(onClick = onDismiss) {
+                        Text("Cancel", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Button(
+                        onClick = { onSubmit(rating, comment) },
+                        enabled = rating > 0,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f)
+                        ),
+                        shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
+                    ) {
+                        Text("Submit")
+                    }
+                }
             }
         }
-    )
+    }
 }

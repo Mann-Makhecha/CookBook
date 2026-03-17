@@ -245,20 +245,32 @@ fun RecipeDetailScreen(
                                     val minutes = recipe.cookingTime.filter { it.isDigit() }.toIntOrNull() ?: 30
                                     onTimerClick(minutes)
                                 },
-                                modifier = Modifier.weight(1f)
+                                modifier = Modifier.weight(1f),
+                                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 12.dp)
                             ) {
-                                Icon(Icons.Default.Timer, contentDescription = null)
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text("Start Timer")
+                                Icon(Icons.Default.Timer, contentDescription = null, modifier = Modifier.size(20.dp))
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text(
+                                    text = "Start Timer",
+                                    maxLines = 1,
+                                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+                                    style = MaterialTheme.typography.labelLarge
+                                )
                             }
 
                             OutlinedButton(
                                 onClick = { onShoppingListClick(recipe.ingredients) },
-                                modifier = Modifier.weight(1f)
+                                modifier = Modifier.weight(1f),
+                                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 12.dp)
                             ) {
-                                Icon(Icons.Default.ShoppingCart, contentDescription = null)
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text("Shopping List")
+                                Icon(Icons.Default.ShoppingCart, contentDescription = null, modifier = Modifier.size(20.dp))
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text(
+                                    text = "Shopping List", 
+                                    maxLines = 1,
+                                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+                                    style = MaterialTheme.typography.labelLarge
+                                )
                             }
                         }
 

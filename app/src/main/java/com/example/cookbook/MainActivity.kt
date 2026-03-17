@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
             CookBookTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = androidx.compose.ui.graphics.Color.Transparent
                 ) {
                     com.example.cookbook.presentation.components.GlassBackground {
                         val navController = rememberNavController()

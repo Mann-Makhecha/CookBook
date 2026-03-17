@@ -16,7 +16,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.cookbook.presentation.components.ErrorView
 import com.example.cookbook.presentation.components.RecipeCard
-import com.example.cookbook.presentation.components.GlassBackground
 import com.example.cookbook.presentation.recipe.RecipeViewModel
 import com.example.cookbook.util.Constants
 import com.example.cookbook.util.Result
@@ -41,44 +40,49 @@ fun HomeScreen(
     Scaffold(
         containerColor = Color.Transparent,
         topBar = {
-            TopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Transparent,
-                    titleContentColor = Color.White,
-                    actionIconContentColor = Color.White
-                ),
-                title = {
-                    Column {
-                        Text(
-                            text = "CookBook",
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Text(
-                            text = selectedCategory ?: "All Recipes",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = Color.White.copy(alpha = 0.7f)
-                        )
+            com.example.cookbook.presentation.components.GlassContainer(
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                cornerRadius = 24.dp
+            ) {
+                TopAppBar(
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = Color.Transparent,
+                        titleContentColor = MaterialTheme.colorScheme.onSurface,
+                        actionIconContentColor = MaterialTheme.colorScheme.onSurface
+                    ),
+                    title = {
+                        Column {
+                            Text(
+                                text = "CookBook",
+                                style = MaterialTheme.typography.titleLarge,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Text(
+                                text = selectedCategory ?: "All Recipes",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    },
+                    actions = {
+                        IconButton(onClick = onSearchClick) {
+                            Icon(Icons.Default.Search, contentDescription = "Search")
+                        }
+                        IconButton(onClick = onFavoritesClick) {
+                            Icon(Icons.Default.Favorite, contentDescription = "Favorites")
+                        }
+                        IconButton(onClick = onProfileClick) {
+                            Icon(Icons.Default.Person, contentDescription = "Profile")
+                        }
                     }
-                },
-                actions = {
-                    IconButton(onClick = onSearchClick) {
-                        Icon(Icons.Default.Search, contentDescription = "Search")
-                    }
-                    IconButton(onClick = onFavoritesClick) {
-                        Icon(Icons.Default.Favorite, contentDescription = "Favorites")
-                    }
-                    IconButton(onClick = onProfileClick) {
-                        Icon(Icons.Default.Person, contentDescription = "Profile")
-                    }
-                }
-            )
+                )
+            }
         },
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 onClick = onAddRecipeClick,
-                containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.85f),
-                contentColor = MaterialTheme.colorScheme.onPrimary,
+                containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.85f),
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                 icon = { Icon(Icons.Default.Add, contentDescription = "Add") },
                 text = { Text("Add Recipe") }
             )
@@ -167,20 +171,6 @@ fun CategoryFilterRow(
     onCategorySelected: (String?) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val chipColors = FilterChipDefaults.filterChipColors(
-        containerColor = Color.White.copy(alpha = 0.1f),
-        labelColor = Color.White,
-        iconColor = Color.White,
-        selectedContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f),
-        selectedLabelColor = Color.White,
-        selectedLeadingIconColor = Color.White
-    )
-    val chipBorder = FilterChipDefaults.filterChipBorder(
-        enabled = true,
-        selected = false,
-        borderColor = Color.White.copy(alpha = 0.2f)
-    )
-
     LazyRow(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -191,8 +181,6 @@ fun CategoryFilterRow(
                 selected = selectedCategory == null,
                 onClick = { onCategorySelected(null) },
                 label = { Text("All") },
-                colors = chipColors,
-                border = chipBorder,
                 leadingIcon = if (selectedCategory == null) {
                     { Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(18.dp)) }
                 } else null
@@ -205,8 +193,6 @@ fun CategoryFilterRow(
                 selected = selectedCategory == category,
                 onClick = { onCategorySelected(category) },
                 label = { Text(category) },
-                colors = chipColors,
-                border = chipBorder,
                 leadingIcon = if (selectedCategory == category) {
                     { Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(18.dp)) }
                 } else null
@@ -235,7 +221,7 @@ fun EmptyRecipesView(
             Icon(
                 imageVector = Icons.Default.Eco,
                 contentDescription = "Vegetarian placeholder",
-                tint = Color.White.copy(alpha = 0.6f),
+                tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(96.dp)
             )
 
@@ -244,7 +230,6 @@ fun EmptyRecipesView(
             Text(
                 text = "No Recipes Yet",
                 style = MaterialTheme.typography.headlineSmall,
-                color = Color.White,
                 fontWeight = FontWeight.Bold
             )
 
@@ -253,7 +238,7 @@ fun EmptyRecipesView(
             Text(
                 text = "Start building your recipe collection by adding your first recipe!",
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color.White.copy(alpha = 0.8f),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = androidx.compose.ui.text.style.TextAlign.Center
             )
 
@@ -261,10 +246,6 @@ fun EmptyRecipesView(
 
             Button(
                 onClick = onAddRecipeClick,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
-                    contentColor = Color.White
-                ),
                 modifier = Modifier.height(50.dp)
             ) {
                 Icon(Icons.Default.Add, contentDescription = null)

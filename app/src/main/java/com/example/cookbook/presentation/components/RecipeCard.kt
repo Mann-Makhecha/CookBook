@@ -57,7 +57,7 @@ fun RecipeCard(
                     Icon(
                         imageVector = Icons.Default.Eco,
                         contentDescription = "Vegetarian placeholder",
-                        tint = Color.White.copy(alpha = 0.5f),
+                        tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(96.dp)
                     )
                 }
@@ -71,7 +71,6 @@ fun RecipeCard(
                     text = recipe.name,
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -89,7 +88,7 @@ fun RecipeCard(
                         Text(
                             text = "(${recipe.reviewCount})",
                             style = MaterialTheme.typography.bodySmall,
-                            color = Color.White.copy(alpha = 0.7f)
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
@@ -101,7 +100,7 @@ fun RecipeCard(
                     Text(
                         text = recipe.description,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Color.White.copy(alpha = 0.8f),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -117,12 +116,6 @@ fun RecipeCard(
                     // Category Chip
                     AssistChip(
                         onClick = { },
-                        colors = AssistChipDefaults.assistChipColors(
-                            containerColor = Color.White.copy(alpha = 0.1f),
-                            labelColor = Color.White,
-                            leadingIconContentColor = Color.White
-                        ),
-                        border = AssistChipDefaults.assistChipBorder(true, borderColor = Color.White.copy(alpha = 0.2f)),
                         label = {
                             Text(
                                 text = recipe.category,
@@ -150,13 +143,13 @@ fun RecipeCard(
                             Icon(
                                 imageVector = Icons.Default.AccessTime,
                                 contentDescription = "Time",
-                                tint = Color.White.copy(alpha = 0.7f),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.size(16.dp)
                             )
                             Text(
                                 text = recipe.cookingTime,
                                 style = MaterialTheme.typography.bodySmall,
-                                color = Color.White.copy(alpha = 0.7f)
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
 
@@ -227,7 +220,7 @@ fun CompactRecipeCard(
                     Icon(
                         imageVector = Icons.Default.Eco,
                         contentDescription = "Vegetarian placeholder",
-                        tint = Color.White.copy(alpha = 0.5f),
+                        tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(96.dp)
                     )
                 }
@@ -241,7 +234,6 @@ fun CompactRecipeCard(
                     text = recipe.name,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -259,7 +251,7 @@ fun CompactRecipeCard(
                         Text(
                             text = "${recipe.averageRating}",
                             style = MaterialTheme.typography.labelSmall,
-                            color = Color.White.copy(alpha = 0.7f)
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
@@ -273,13 +265,13 @@ fun CompactRecipeCard(
                     Icon(
                         imageVector = Icons.Default.AccessTime,
                         contentDescription = "Time",
-                        tint = Color.White.copy(alpha = 0.7f),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(14.dp)
                     )
                     Text(
                         text = recipe.cookingTime,
                         style = MaterialTheme.typography.bodySmall,
-                        color = Color.White.copy(alpha = 0.7f),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )

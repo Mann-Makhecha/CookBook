@@ -54,17 +54,23 @@ fun LoginScreen(
         }
     }
 
-    Surface(
+    Box(
         modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
+        contentAlignment = Alignment.Center
     ) {
-        Column(
+        com.example.cookbook.presentation.components.GlassContainer(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
                 .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            cornerRadius = 32.dp
         ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(32.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
             // App Logo
            Icon(
                                 imageVector = Icons.Default.Eco,
@@ -105,6 +111,12 @@ fun LoginScreen(
                 supportingText = {
                     emailError?.let { Text(it) }
                 },
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedContainerColor = androidx.compose.ui.graphics.Color.Transparent,
+                    unfocusedContainerColor = androidx.compose.ui.graphics.Color.Transparent,
+                    focusedBorderColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
+                    unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+                ),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Email,
                     imeAction = ImeAction.Next
@@ -140,6 +152,12 @@ fun LoginScreen(
                 supportingText = {
                     passwordError?.let { Text(it) }
                 },
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedContainerColor = androidx.compose.ui.graphics.Color.Transparent,
+                    unfocusedContainerColor = androidx.compose.ui.graphics.Color.Transparent,
+                    focusedBorderColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
+                    unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+                ),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password,
                     imeAction = ImeAction.Done
@@ -187,7 +205,11 @@ fun LoginScreen(
                 enabled = authState !is Result.Loading,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(50.dp)
+                    .height(50.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f)
+                ),
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
             ) {
                 if (authState is Result.Loading) {
                     CircularProgressIndicator(
@@ -220,6 +242,7 @@ fun LoginScreen(
                         .padding(4.dp)
                 )
             }
+        }
         }
     }
 }

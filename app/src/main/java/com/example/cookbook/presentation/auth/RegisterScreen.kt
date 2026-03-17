@@ -57,18 +57,24 @@ fun RegisterScreen(
         }
     }
 
-    Surface(
+    Box(
         modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
+        contentAlignment = Alignment.Center
     ) {
-        Column(
+        com.example.cookbook.presentation.components.GlassContainer(
             modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(scrollState)
+                .fillMaxWidth()
                 .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            cornerRadius = 32.dp
         ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(scrollState)
+                    .padding(32.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
             // App Logo
            Icon(
                 imageVector = Icons.Default.Eco,
@@ -108,6 +114,12 @@ fun RegisterScreen(
                 supportingText = {
                     nameError?.let { Text(it) }
                 },
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedContainerColor = androidx.compose.ui.graphics.Color.Transparent,
+                    unfocusedContainerColor = androidx.compose.ui.graphics.Color.Transparent,
+                    focusedBorderColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
+                    unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+                ),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Next
@@ -134,6 +146,12 @@ fun RegisterScreen(
                 supportingText = {
                     emailError?.let { Text(it) }
                 },
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedContainerColor = androidx.compose.ui.graphics.Color.Transparent,
+                    unfocusedContainerColor = androidx.compose.ui.graphics.Color.Transparent,
+                    focusedBorderColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
+                    unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+                ),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Email,
                     imeAction = ImeAction.Next
@@ -169,6 +187,12 @@ fun RegisterScreen(
                 supportingText = {
                     passwordError?.let { Text(it) }
                 },
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedContainerColor = androidx.compose.ui.graphics.Color.Transparent,
+                    unfocusedContainerColor = androidx.compose.ui.graphics.Color.Transparent,
+                    focusedBorderColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
+                    unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+                ),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password,
                     imeAction = ImeAction.Next
@@ -204,6 +228,12 @@ fun RegisterScreen(
                 supportingText = {
                     confirmPasswordError?.let { Text(it) }
                 },
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedContainerColor = androidx.compose.ui.graphics.Color.Transparent,
+                    unfocusedContainerColor = androidx.compose.ui.graphics.Color.Transparent,
+                    focusedBorderColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
+                    unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+                ),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password,
                     imeAction = ImeAction.Done
@@ -238,7 +268,11 @@ fun RegisterScreen(
                 enabled = authState !is Result.Loading,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(50.dp)
+                    .height(50.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f)
+                ),
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
             ) {
                 if (authState is Result.Loading) {
                     CircularProgressIndicator(
@@ -274,6 +308,7 @@ fun RegisterScreen(
                         .padding(4.dp)
                 )
             }
+        }
         }
     }
 }

@@ -124,9 +124,9 @@ fun FloatingTimerPill(
                     }
                 }
         ) {
-            GlassContainer(
+            com.example.cookbook.presentation.components.GlassContainer(
                 cornerRadius = 28.dp,
-                modifier = Modifier.clickable(onClick = onPillClick)
+                modifier = Modifier.clickable { onPillClick() }
             ) {
                 Row(
                     modifier = Modifier
@@ -136,7 +136,8 @@ fun FloatingTimerPill(
                     Icon(
                         imageVector = Icons.Default.Timer,
                         contentDescription = "Timer",
-                        tint = if (isFinished) Color(0xFFFF4040) else Color(0xFF00F0FF),
+                        tint = if (isFinished) MaterialTheme.colorScheme.error
+                        else MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(20.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
@@ -144,7 +145,8 @@ fun FloatingTimerPill(
                         text = if (isFinished) "Time's up!" else timeText,
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
-                        color = if (isFinished) Color(0xFFFF4040) else Color.White
+                        color = if (isFinished) MaterialTheme.colorScheme.error
+                        else MaterialTheme.colorScheme.onSurface
                     )
                     Spacer(modifier = Modifier.width(4.dp))
 
@@ -156,8 +158,7 @@ fun FloatingTimerPill(
                         Icon(
                             imageVector = Icons.Default.Close,
                             contentDescription = "Dismiss timer pill",
-                            tint = if (isFinished) Color(0xFFFF4040).copy(alpha = 0.7f)
-                            else Color.White.copy(alpha = 0.7f),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
                             modifier = Modifier.size(16.dp)
                         )
                     }

@@ -6,6 +6,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -14,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
@@ -36,7 +38,10 @@ fun EditRecipeScreen(
     var recipeName by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf(Constants.RECIPE_CATEGORIES[0]) }
-    var cookingTime by remember { mutableStateOf("") }
+    var cookingTimeAmount by remember { mutableStateOf("") }
+    var selectedTimeUnit by remember { mutableStateOf("min") }
+    val timeUnits = listOf("min", "hours")
+    var showTimeUnitMenu by remember { mutableStateOf(false) }
     var selectedDifficulty by remember { mutableStateOf(Constants.RECIPE_DIFFICULTIES[0]) }
     var ingredients by remember { mutableStateOf(mutableListOf<String>()) }
     var steps by remember { mutableStateOf(mutableListOf<String>()) }
@@ -69,7 +74,8 @@ fun EditRecipeScreen(
             recipeName = recipe.name
             description = recipe.description
             selectedCategory = recipe.category
-            cookingTime = recipe.cookingTime
+            cookingTimeAmount = recipe.cookingTime.filter { it.isDigit() }
+            selectedTimeUnit = if (recipe.cookingTime.contains("hour", ignoreCase = true)) "hours" else "min"
             selectedDifficulty = recipe.difficulty
             ingredients = recipe.ingredients.toMutableList()
             steps = recipe.steps.toMutableList()
@@ -99,6 +105,8 @@ fun EditRecipeScreen(
                     TextButton(
                         onClick = {
                             if (recipeName.isNotBlank() &&
+                                cookingTimeAmount.isNotBlank() &&
+                                cookingTimeAmount.toIntOrNull() != null &&
                                 ingredients.any { it.isNotBlank() } &&
                                 steps.any { it.isNotBlank() } &&
                                 recipeState is Result.Success) {
@@ -108,7 +116,7 @@ fun EditRecipeScreen(
                                     name = recipeName,
                                     description = description,
                                     category = selectedCategory,
-                                    cookingTime = cookingTime,
+                                    cookingTime = "$cookingTimeAmount $selectedTimeUnit",
                                     difficulty = selectedDifficulty,
                                     ingredients = ingredients.filter { it.isNotBlank() },
                                     steps = steps.filter { it.isNotBlank() }
@@ -119,6 +127,8 @@ fun EditRecipeScreen(
                         },
                         enabled = saveRecipeState !is Result.Loading &&
                                   recipeName.isNotBlank() &&
+                                  cookingTimeAmount.isNotBlank() &&
+                                  cookingTimeAmount.toIntOrNull() != null &&
                                   ingredients.any { it.isNotBlank() } &&
                                   steps.any { it.isNotBlank() }
                     ) {
@@ -306,21 +316,56 @@ fun EditRecipeScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        // Cooking Time
-                        OutlinedTextField(
-                            value = cookingTime,
-                            onValueChange = { cookingTime = it },
-                            label = { Text("Cooking Time") },
-                            placeholder = { Text("e.g., 30 minutes") },
-                            singleLine = true,
-                            modifier = Modifier.weight(1f)
-                        )
+                        // Cooking Time Amount
+                OutlinedTextField(
+                    value = cookingTimeAmount,
+                    onValueChange = { if (it.isEmpty() || it.all { char -> char.isDigit() }) cookingTimeAmount = it },
+                    label = { Text("Time") },
+                    placeholder = { Text("e.g., 30") },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    modifier = Modifier.weight(0.3f)
+                )
 
-                        // Difficulty Dropdown
-                        ExposedDropdownMenuBox(
-                            expanded = showDifficultyMenu,
-                            onExpandedChange = { showDifficultyMenu = it },
-                            modifier = Modifier.weight(1f)
+                // Cooking Time Unit Dropdown
+                ExposedDropdownMenuBox(
+                    expanded = showTimeUnitMenu,
+                    onExpandedChange = { showTimeUnitMenu = it },
+                    modifier = Modifier.weight(0.35f)
+                ) {
+                    OutlinedTextField(
+                        value = selectedTimeUnit,
+                        onValueChange = {},
+                        readOnly = true,
+                        label = { Text("Unit") },
+                        trailingIcon = {
+                            ExposedDropdownMenuDefaults.TrailingIcon(expanded = showTimeUnitMenu)
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .menuAnchor()
+                    )
+                    ExposedDropdownMenu(
+                        expanded = showTimeUnitMenu,
+                        onDismissRequest = { showTimeUnitMenu = false }
+                    ) {
+                        timeUnits.forEach { unit ->
+                            DropdownMenuItem(
+                                text = { Text(unit) },
+                                onClick = {
+                                    selectedTimeUnit = unit
+                                    showTimeUnitMenu = false
+                                }
+                            )
+                        }
+                    }
+                }
+
+                // Difficulty Dropdown
+                ExposedDropdownMenuBox(
+                    expanded = showDifficultyMenu,
+                    onExpandedChange = { showDifficultyMenu = it },
+                    modifier = Modifier.weight(0.35f)
                         ) {
                             OutlinedTextField(
                                 value = selectedDifficulty,

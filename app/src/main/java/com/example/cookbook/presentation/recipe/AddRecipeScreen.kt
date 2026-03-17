@@ -8,6 +8,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -16,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
@@ -37,7 +39,10 @@ fun AddRecipeScreen(
     var recipeName by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf(Constants.RECIPE_CATEGORIES[0]) }
-    var cookingTime by remember { mutableStateOf("") }
+    var cookingTimeAmount by remember { mutableStateOf("") }
+    var selectedTimeUnit by remember { mutableStateOf("min") }
+    val timeUnits = listOf("min", "hours")
+    var showTimeUnitMenu by remember { mutableStateOf(false) }
     var selectedDifficulty by remember { mutableStateOf(Constants.RECIPE_DIFFICULTIES[0]) }
     var ingredients by remember { mutableStateOf(mutableListOf("")) }
     var steps by remember { mutableStateOf(mutableListOf("")) }
@@ -78,6 +83,8 @@ fun AddRecipeScreen(
                         onClick = {
                             // Validate and save recipe
                             if (recipeName.isNotBlank() &&
+                                cookingTimeAmount.isNotBlank() &&
+                                cookingTimeAmount.toIntOrNull() != null &&
                                 ingredients.any { it.isNotBlank() } &&
                                 steps.any { it.isNotBlank() }) {
 
@@ -85,7 +92,7 @@ fun AddRecipeScreen(
                                     name = recipeName,
                                     description = description,
                                     category = selectedCategory,
-                                    cookingTime = cookingTime,
+                                    cookingTime = "$cookingTimeAmount $selectedTimeUnit",
                                     difficulty = selectedDifficulty,
                                     ingredients = ingredients.filter { it.isNotBlank() },
                                     steps = steps.filter { it.isNotBlank() }
@@ -96,6 +103,8 @@ fun AddRecipeScreen(
                         },
                         enabled = saveRecipeState !is Result.Loading &&
                                   recipeName.isNotBlank() &&
+                                  cookingTimeAmount.isNotBlank() &&
+                                  cookingTimeAmount.toIntOrNull() != null &&
                                   ingredients.any { it.isNotBlank() } &&
                                   steps.any { it.isNotBlank() }
                     ) {
@@ -236,21 +245,56 @@ fun AddRecipeScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                // Cooking Time
+                // Cooking Time Amount
                 OutlinedTextField(
-                    value = cookingTime,
-                    onValueChange = { cookingTime = it },
-                    label = { Text("Cooking Time") },
-                    placeholder = { Text("e.g., 30 minutes") },
+                    value = cookingTimeAmount,
+                    onValueChange = { if (it.isEmpty() || it.all { char -> char.isDigit() }) cookingTimeAmount = it },
+                    label = { Text("Time") },
+                    placeholder = { Text("e.g., 30") },
                     singleLine = true,
-                    modifier = Modifier.weight(1f)
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    modifier = Modifier.weight(0.3f)
                 )
+
+                // Cooking Time Unit Dropdown
+                ExposedDropdownMenuBox(
+                    expanded = showTimeUnitMenu,
+                    onExpandedChange = { showTimeUnitMenu = it },
+                    modifier = Modifier.weight(0.35f)
+                ) {
+                    OutlinedTextField(
+                        value = selectedTimeUnit,
+                        onValueChange = {},
+                        readOnly = true,
+                        label = { Text("Unit") },
+                        trailingIcon = {
+                            ExposedDropdownMenuDefaults.TrailingIcon(expanded = showTimeUnitMenu)
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .menuAnchor()
+                    )
+                    ExposedDropdownMenu(
+                        expanded = showTimeUnitMenu,
+                        onDismissRequest = { showTimeUnitMenu = false }
+                    ) {
+                        timeUnits.forEach { unit ->
+                            DropdownMenuItem(
+                                text = { Text(unit) },
+                                onClick = {
+                                    selectedTimeUnit = unit
+                                    showTimeUnitMenu = false
+                                }
+                            )
+                        }
+                    }
+                }
 
                 // Difficulty Dropdown
                 ExposedDropdownMenuBox(
                     expanded = showDifficultyMenu,
                     onExpandedChange = { showDifficultyMenu = it },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(0.35f)
                 ) {
                     OutlinedTextField(
                         value = selectedDifficulty,

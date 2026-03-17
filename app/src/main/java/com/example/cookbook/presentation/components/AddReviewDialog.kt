@@ -23,13 +23,16 @@ fun AddReviewDialog(
     var comment by remember { mutableStateOf("") }
 
     Dialog(onDismissRequest = onDismiss) {
-        GlassContainer(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            cornerRadius = 32.dp
+        Surface(
+            shape = androidx.compose.foundation.shape.RoundedCornerShape(32.dp),
+            color = MaterialTheme.colorScheme.surface,
+            modifier = Modifier.padding(16.dp)
         ) {
-            Column(
+            GlassContainer(
+                modifier = Modifier.fillMaxWidth(),
+                cornerRadius = 32.dp
+            ) {
+                Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(24.dp),
@@ -98,4 +101,4 @@ fun AddReviewDialog(
             }
         }
     }
-}
+}}

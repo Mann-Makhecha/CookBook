@@ -84,9 +84,14 @@ fun TimerScreen(
         label = "timer_progress"
     )
 
-    val minutes = remainingSeconds / 60
+    val hours = remainingSeconds / 3600
+    val minutes = (remainingSeconds % 3600) / 60
     val seconds = remainingSeconds % 60
-    val timeText = String.format("%02d:%02d", minutes, seconds)
+    val timeText = if (hours > 0) {
+        String.format("%02d:%02d:%02d", hours, minutes, seconds)
+    } else {
+        String.format("%02d:%02d", minutes, seconds)
+    }
 
     Scaffold(
         topBar = {
@@ -159,8 +164,15 @@ fun TimerScreen(
                             color = MaterialTheme.colorScheme.error
                         )
                     } else {
+                        val durationText = if (durationMinutes >= 60) {
+                            val h = durationMinutes / 60
+                            val m = durationMinutes % 60
+                            if (m > 0) "$h hr $m min timer" else "$h hr timer"
+                        } else {
+                            "$durationMinutes min timer"
+                        }
                         Text(
-                            text = "$durationMinutes min timer",
+                            text = durationText,
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )

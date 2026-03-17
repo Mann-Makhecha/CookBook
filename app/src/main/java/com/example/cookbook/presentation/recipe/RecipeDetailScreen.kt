@@ -241,9 +241,12 @@ fun RecipeDetailScreen(
                         ) {
                             Button(
                                 onClick = {
-                                    // Extract minutes from cooking time string
-                                    val minutes = recipe.cookingTime.filter { it.isDigit() }.toIntOrNull() ?: 30
-                                    onTimerClick(minutes)
+                                    // Extract minutes from cooking time string, handling hours
+                                    val timeStr = recipe.cookingTime.lowercase()
+                                    val amount = timeStr.filter { it.isDigit() }.toIntOrNull() ?: 30
+                                    val isHours = timeStr.contains("hour")
+                                    val totalMinutes = if (isHours) amount * 60 else amount
+                                    onTimerClick(totalMinutes)
                                 },
                                 modifier = Modifier.weight(1f),
                                 contentPadding = PaddingValues(horizontal = 8.dp, vertical = 12.dp)

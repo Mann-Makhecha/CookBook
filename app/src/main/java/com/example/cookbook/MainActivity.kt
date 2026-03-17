@@ -36,28 +36,30 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val navController = rememberNavController()
-                    val navBackStackEntry by navController.currentBackStackEntryAsState()
-                    val currentRoute = navBackStackEntry?.destination?.route
+                    com.example.cookbook.presentation.components.GlassBackground {
+                        val navController = rememberNavController()
+                        val navBackStackEntry by navController.currentBackStackEntryAsState()
+                        val currentRoute = navBackStackEntry?.destination?.route
 
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        NavGraph(navController = navController)
+                        Box(modifier = Modifier.fillMaxSize()) {
+                            NavGraph(navController = navController)
 
-                        // Floating timer pill — shown on all screens except the timer screen
-                        FloatingTimerPill(
-                            isOnTimerScreen = currentRoute == Constants.Routes.TIMER,
-                            onPillClick = {
-                                if (currentRoute != Constants.Routes.TIMER) {
-                                    navController.navigate(Constants.Routes.timer(0)) {
-                                        launchSingleTop = true
+                            // Floating timer pill — shown on all screens except the timer screen
+                            FloatingTimerPill(
+                                isOnTimerScreen = currentRoute == Constants.Routes.TIMER,
+                                onPillClick = {
+                                    if (currentRoute != Constants.Routes.TIMER) {
+                                        navController.navigate(Constants.Routes.timer(0)) {
+                                            launchSingleTop = true
+                                        }
                                     }
-                                }
-                            },
-                            modifier = Modifier
-                                .align(Alignment.BottomCenter)
-                                .navigationBarsPadding()
-                                .padding(bottom = 16.dp)
-                        )
+                                },
+                                modifier = Modifier
+                                    .align(Alignment.BottomCenter)
+                                    .navigationBarsPadding()
+                                    .padding(bottom = 16.dp)
+                            )
+                        }
                     }
                 }
             }

@@ -11,13 +11,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.cookbook.data.model.Recipe
-import com.example.cookbook.presentation.components.RatingBar
 
 /**
  * Recipe Card component for displaying recipe preview in lists.
@@ -30,11 +30,10 @@ fun RecipeCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Card(
+    GlassContainer(
         modifier = modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            .clickable(onClick = onClick)
     ) {
         Column {
             // Recipe Image
@@ -56,13 +55,11 @@ fun RecipeCard(
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                                imageVector = Icons.Default.Eco,
-                                contentDescription = "Vegetarian placeholder",
-                                tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.size(96.dp)
+                        imageVector = Icons.Default.Eco,
+                        contentDescription = "Vegetarian placeholder",
+                        tint = Color.White.copy(alpha = 0.5f),
+                        modifier = Modifier.size(96.dp)
                     )
-
-
                 }
             }
 
@@ -74,6 +71,7 @@ fun RecipeCard(
                     text = recipe.name,
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
+                    color = Color.White,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -91,7 +89,7 @@ fun RecipeCard(
                         Text(
                             text = "(${recipe.reviewCount})",
                             style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = Color.White.copy(alpha = 0.7f)
                         )
                     }
                 }
@@ -103,7 +101,7 @@ fun RecipeCard(
                     Text(
                         text = recipe.description,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        color = Color.White.copy(alpha = 0.8f),
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -119,6 +117,12 @@ fun RecipeCard(
                     // Category Chip
                     AssistChip(
                         onClick = { },
+                        colors = AssistChipDefaults.assistChipColors(
+                            containerColor = Color.White.copy(alpha = 0.1f),
+                            labelColor = Color.White,
+                            leadingIconContentColor = Color.White
+                        ),
+                        border = AssistChipDefaults.assistChipBorder(true, borderColor = Color.White.copy(alpha = 0.2f)),
                         label = {
                             Text(
                                 text = recipe.category,
@@ -146,13 +150,13 @@ fun RecipeCard(
                             Icon(
                                 imageVector = Icons.Default.AccessTime,
                                 contentDescription = "Time",
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                tint = Color.White.copy(alpha = 0.7f),
                                 modifier = Modifier.size(16.dp)
                             )
                             Text(
                                 text = recipe.cookingTime,
                                 style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                color = Color.White.copy(alpha = 0.7f)
                             )
                         }
 
@@ -197,11 +201,10 @@ fun CompactRecipeCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Card(
+    GlassContainer(
         modifier = modifier
             .width(160.dp)
-            .clickable(onClick = onClick),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            .clickable(onClick = onClick)
     ) {
         Column {
             // Recipe Image
@@ -220,12 +223,13 @@ fun CompactRecipeCard(
                         .fillMaxWidth()
                         .height(120.dp),
                     contentAlignment = Alignment.Center
-                ) {Icon(
-                                imageVector = Icons.Default.Eco,
-                                contentDescription = "Vegetarian placeholder",
-                                tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.size(96.dp)
-                            )
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Eco,
+                        contentDescription = "Vegetarian placeholder",
+                        tint = Color.White.copy(alpha = 0.5f),
+                        modifier = Modifier.size(96.dp)
+                    )
                 }
             }
 
@@ -237,6 +241,7 @@ fun CompactRecipeCard(
                     text = recipe.name,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
+                    color = Color.White,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -254,7 +259,7 @@ fun CompactRecipeCard(
                         Text(
                             text = "${recipe.averageRating}",
                             style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = Color.White.copy(alpha = 0.7f)
                         )
                     }
                 }
@@ -268,13 +273,13 @@ fun CompactRecipeCard(
                     Icon(
                         imageVector = Icons.Default.AccessTime,
                         contentDescription = "Time",
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        tint = Color.White.copy(alpha = 0.7f),
                         modifier = Modifier.size(14.dp)
                     )
                     Text(
                         text = recipe.cookingTime,
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        color = Color.White.copy(alpha = 0.7f),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )

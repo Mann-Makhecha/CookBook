@@ -10,11 +10,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.cookbook.presentation.components.ErrorView
 import com.example.cookbook.presentation.components.RecipeCard
+import com.example.cookbook.presentation.components.GlassBackground
 import com.example.cookbook.presentation.recipe.RecipeViewModel
 import com.example.cookbook.util.Constants
 import com.example.cookbook.util.Result
@@ -37,8 +39,14 @@ fun HomeScreen(
     val selectedCategory by viewModel.selectedCategory.collectAsState()
 
     Scaffold(
+        containerColor = Color.Transparent,
         topBar = {
             TopAppBar(
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.Transparent,
+                    titleContentColor = Color.White,
+                    actionIconContentColor = Color.White
+                ),
                 title = {
                     Column {
                         Text(
@@ -49,7 +57,7 @@ fun HomeScreen(
                         Text(
                             text = selectedCategory ?: "All Recipes",
                             style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = Color.White.copy(alpha = 0.7f)
                         )
                     }
                 },
@@ -69,6 +77,8 @@ fun HomeScreen(
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 onClick = onAddRecipeClick,
+                containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.85f),
+                contentColor = MaterialTheme.colorScheme.onPrimary,
                 icon = { Icon(Icons.Default.Add, contentDescription = "Add") },
                 text = { Text("Add Recipe") }
             )
@@ -99,7 +109,7 @@ fun HomeScreen(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
-                        CircularProgressIndicator()
+                        CircularProgressIndicator(color = Color.White)
                     }
                 }
 
@@ -157,6 +167,20 @@ fun CategoryFilterRow(
     onCategorySelected: (String?) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val chipColors = FilterChipDefaults.filterChipColors(
+        containerColor = Color.White.copy(alpha = 0.1f),
+        labelColor = Color.White,
+        iconColor = Color.White,
+        selectedContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f),
+        selectedLabelColor = Color.White,
+        selectedLeadingIconColor = Color.White
+    )
+    val chipBorder = FilterChipDefaults.filterChipBorder(
+        enabled = true,
+        selected = false,
+        borderColor = Color.White.copy(alpha = 0.2f)
+    )
+
     LazyRow(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -167,6 +191,8 @@ fun CategoryFilterRow(
                 selected = selectedCategory == null,
                 onClick = { onCategorySelected(null) },
                 label = { Text("All") },
+                colors = chipColors,
+                border = chipBorder,
                 leadingIcon = if (selectedCategory == null) {
                     { Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(18.dp)) }
                 } else null
@@ -179,6 +205,8 @@ fun CategoryFilterRow(
                 selected = selectedCategory == category,
                 onClick = { onCategorySelected(category) },
                 label = { Text(category) },
+                colors = chipColors,
+                border = chipBorder,
                 leadingIcon = if (selectedCategory == category) {
                     { Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(18.dp)) }
                 } else null
@@ -203,18 +231,20 @@ fun EmptyRecipesView(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
             modifier = Modifier.padding(32.dp)
-        ) {Icon(
-                                imageVector = Icons.Default.Eco,
-                                contentDescription = "Vegetarian placeholder",
-                                tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.size(96.dp)
-                            )
+        ) {
+            Icon(
+                imageVector = Icons.Default.Eco,
+                contentDescription = "Vegetarian placeholder",
+                tint = Color.White.copy(alpha = 0.6f),
+                modifier = Modifier.size(96.dp)
+            )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
                 text = "No Recipes Yet",
                 style = MaterialTheme.typography.headlineSmall,
+                color = Color.White,
                 fontWeight = FontWeight.Bold
             )
 
@@ -223,7 +253,7 @@ fun EmptyRecipesView(
             Text(
                 text = "Start building your recipe collection by adding your first recipe!",
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = Color.White.copy(alpha = 0.8f),
                 textAlign = androidx.compose.ui.text.style.TextAlign.Center
             )
 
@@ -231,6 +261,10 @@ fun EmptyRecipesView(
 
             Button(
                 onClick = onAddRecipeClick,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
+                    contentColor = Color.White
+                ),
                 modifier = Modifier.height(50.dp)
             ) {
                 Icon(Icons.Default.Add, contentDescription = null)

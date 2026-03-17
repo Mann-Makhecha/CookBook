@@ -17,6 +17,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.foundation.clickable
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -122,13 +124,9 @@ fun FloatingTimerPill(
                     }
                 }
         ) {
-            Surface(
-                onClick = onPillClick,
-                shape = RoundedCornerShape(28.dp),
-                color = if (isFinished) MaterialTheme.colorScheme.error
-                else MaterialTheme.colorScheme.primaryContainer,
-                tonalElevation = 6.dp,
-                shadowElevation = 8.dp
+            GlassContainer(
+                cornerRadius = 28.dp,
+                modifier = Modifier.clickable(onClick = onPillClick)
             ) {
                 Row(
                     modifier = Modifier
@@ -138,8 +136,7 @@ fun FloatingTimerPill(
                     Icon(
                         imageVector = Icons.Default.Timer,
                         contentDescription = "Timer",
-                        tint = if (isFinished) MaterialTheme.colorScheme.onError
-                        else MaterialTheme.colorScheme.onPrimaryContainer,
+                        tint = if (isFinished) Color(0xFFFF4040) else Color(0xFF00F0FF),
                         modifier = Modifier.size(20.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
@@ -147,8 +144,7 @@ fun FloatingTimerPill(
                         text = if (isFinished) "Time's up!" else timeText,
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
-                        color = if (isFinished) MaterialTheme.colorScheme.onError
-                        else MaterialTheme.colorScheme.onPrimaryContainer
+                        color = if (isFinished) Color(0xFFFF4040) else Color.White
                     )
                     Spacer(modifier = Modifier.width(4.dp))
 
@@ -160,8 +156,8 @@ fun FloatingTimerPill(
                         Icon(
                             imageVector = Icons.Default.Close,
                             contentDescription = "Dismiss timer pill",
-                            tint = if (isFinished) MaterialTheme.colorScheme.onError.copy(alpha = 0.7f)
-                            else MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f),
+                            tint = if (isFinished) Color(0xFFFF4040).copy(alpha = 0.7f)
+                            else Color.White.copy(alpha = 0.7f),
                             modifier = Modifier.size(16.dp)
                         )
                     }

@@ -22,10 +22,13 @@ fun AddReviewDialog(
     var rating by remember { mutableStateOf(5f) }
     var comment by remember { mutableStateOf("") }
 
+    val isDark = androidx.compose.foundation.isSystemInDarkTheme()
+    val solidBackgroundColor = if (isDark) Color(0xFF0B1320) else Color(0xFFF0F4F8)
+
     Dialog(onDismissRequest = onDismiss) {
         Surface(
             shape = androidx.compose.foundation.shape.RoundedCornerShape(32.dp),
-            color = MaterialTheme.colorScheme.surface,
+            color = solidBackgroundColor,
             modifier = Modifier.padding(16.dp)
         ) {
             GlassContainer(

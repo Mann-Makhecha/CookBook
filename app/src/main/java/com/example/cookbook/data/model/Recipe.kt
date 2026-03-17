@@ -21,7 +21,8 @@ data class Recipe(
     @ServerTimestamp
     val createdAt: Timestamp? = null,
     val averageRating: Float = 0f,
-    val reviewCount: Int = 0
+    val reviewCount: Int = 0,
+    val isJain: Boolean = false
 ) {
     /**
      * Convert Recipe to a Map for Firestore storage.
@@ -40,7 +41,8 @@ data class Recipe(
             "createdBy" to createdBy,
             "createdAt" to createdAt,
             "averageRating" to averageRating,
-            "reviewCount" to reviewCount
+            "reviewCount" to reviewCount,
+            "isJain" to isJain
         )
     }
 
@@ -62,7 +64,8 @@ data class Recipe(
                 createdBy = map["createdBy"] as? String ?: "",
                 createdAt = map["createdAt"] as? Timestamp,
                 averageRating = (map["averageRating"] as? Number)?.toFloat() ?: 0f,
-                reviewCount = (map["reviewCount"] as? Number)?.toInt() ?: 0
+                reviewCount = (map["reviewCount"] as? Number)?.toInt() ?: 0,
+                isJain = map["isJain"] as? Boolean ?: false
             )
         }
     }

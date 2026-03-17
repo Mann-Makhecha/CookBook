@@ -46,6 +46,7 @@ fun AddRecipeScreen(
     var selectedDifficulty by remember { mutableStateOf(Constants.RECIPE_DIFFICULTIES[0]) }
     var ingredients by remember { mutableStateOf(mutableListOf("")) }
     var steps by remember { mutableStateOf(mutableListOf("")) }
+    var isJain by remember { mutableStateOf(false) }
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
     var showCategoryMenu by remember { mutableStateOf(false) }
@@ -95,7 +96,8 @@ fun AddRecipeScreen(
                                     cookingTime = "$cookingTimeAmount $selectedTimeUnit",
                                     difficulty = selectedDifficulty,
                                     ingredients = ingredients.filter { it.isNotBlank() },
-                                    steps = steps.filter { it.isNotBlank() }
+                                    steps = steps.filter { it.isNotBlank() },
+                                    isJain = isJain
                                 )
 
                                 viewModel.addRecipe(recipe, selectedImageUri)
@@ -323,6 +325,22 @@ fun AddRecipeScreen(
                         }
                     }
                 }
+            }
+
+            // Jain Recipe Toggle
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Jain Recipe",
+                    modifier = Modifier.weight(1f),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                Switch(
+                    checked = isJain,
+                    onCheckedChange = { isJain = it }
+                )
             }
 
             Divider()

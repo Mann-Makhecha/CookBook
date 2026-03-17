@@ -61,6 +61,13 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
     private val _selectedCategory = MutableStateFlow<String?>(null)
     val selectedCategory: StateFlow<String?> = _selectedCategory.asStateFlow()
 
+    // Jain filter
+    private val _isJainFilter = MutableStateFlow(false)
+    val isJainFilter: StateFlow<Boolean> = _isJainFilter.asStateFlow()
+
+    // Raw recipes to apply local filtering without network requests
+    private var rawRecipes: List<Recipe>? = null
+
     // Reviews for current recipe
     private val _reviewsState = MutableStateFlow<Result<List<Review>>>(Result.Loading)
     val reviewsState: StateFlow<Result<List<Review>>> = _reviewsState.asStateFlow()
@@ -80,7 +87,12 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
         viewModelScope.launch {
             recipeRepository.getAllRecipes()
                 .collect { result ->
-                    _recipesState.value = result
+                    if (result is Result.Success) {
+                        rawRecipes = result.data
+                        applyLocalFilters()
+                    } else {
+                        _recipesState.value = result
+                    }
                 }
         }
     }
@@ -93,7 +105,12 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
         viewModelScope.launch {
             recipeRepository.getRecipesByCategory(category)
                 .collect { result ->
-                    _recipesState.value = result
+                    if (result is Result.Success) {
+                        rawRecipes = result.data
+                        applyLocalFilters()
+                    } else {
+                        _recipesState.value = result
+                    }
                 }
         }
     }
@@ -228,7 +245,12 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
         viewModelScope.launch {
             recipeRepository.searchRecipes(query)
                 .collect { result ->
-                    _recipesState.value = result
+                    if (result is Result.Success) {
+                        rawRecipes = result.data
+                        applyLocalFilters()
+                    } else {
+                        _recipesState.value = result
+                    }
                 }
         }
     }
@@ -428,5 +450,19 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
      */
     fun clearSaveReviewState() {
         _saveReviewState.value = null
+    }
+
+    /**
+     * Toggle Jain filter and re-apply filters locally
+     */
+    fun toggleJainFilter(enabled: Boolean) {
+        _isJainFilter.value = enabled
+        applyLocalFilters()
+    }
+
+    private fun applyLocalFilters() {
+        val recipes = rawRecipes ?: return
+        val jainFiltered = if (_isJainFilter.value) recipes.filter { it.isJain } else recipes
+        _recipesState.value = Result.Success(jainFiltered)
     }
 }

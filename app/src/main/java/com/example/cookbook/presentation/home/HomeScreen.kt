@@ -36,6 +36,7 @@ fun HomeScreen(
 ) {
     val recipesState by viewModel.recipesState.collectAsState()
     val selectedCategory by viewModel.selectedCategory.collectAsState()
+    val isJainFilter by viewModel.isJainFilter.collectAsState()
 
     Scaffold(
         containerColor = Color.Transparent,
@@ -103,6 +104,8 @@ fun HomeScreen(
                         viewModel.loadRecipesByCategory(category)
                     }
                 },
+                isJainFilter = isJainFilter,
+                onJainFilterToggle = { viewModel.toggleJainFilter(it) },
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
             )
 
@@ -169,12 +172,30 @@ fun HomeScreen(
 fun CategoryFilterRow(
     selectedCategory: String?,
     onCategorySelected: (String?) -> Unit,
+    isJainFilter: Boolean,
+    onJainFilterToggle: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyRow(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
+        // Jain Filter chip
+        item {
+            FilterChip(
+                selected = isJainFilter,
+                onClick = { onJainFilterToggle(!isJainFilter) },
+                label = { Text("Jain") },
+                leadingIcon = if (isJainFilter) {
+                    { Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(18.dp)) }
+                } else null,
+                colors = FilterChipDefaults.filterChipColors(
+                    selectedContainerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                    selectedLabelColor = MaterialTheme.colorScheme.onTertiaryContainer
+                )
+            )
+        }
+
         // "All" chip
         item {
             FilterChip(
